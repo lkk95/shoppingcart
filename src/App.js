@@ -1,20 +1,24 @@
 import "./App.css";
 import Item from "./Item.js";
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
 function App() {
   const [items, setItems] = useState([
     {
+      id: nanoid(),
       name: "Banana",
       price: 0.5,
       count: 0,
     },
     {
+      id: nanoid(),
       name: "Avocado",
       price: 1.9,
       count: 0,
     },
     {
+      id: nanoid(),
       name: "Apple",
       price: 0.6,
       count: 0,
@@ -24,9 +28,17 @@ function App() {
   let cartamount = totalCartAmount(items);
   let leftamount = 30 - cartamount;
 
-  function setNewItems(index, newValue) {
-    const newItems = [...items];
-    newItems[index] = { ...newItems[index], count: newValue };
+  function setNewItems(id, newValue) {
+    const newItems = items.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          count: newValue,
+        };
+      } else {
+        return item;
+      }
+    });
     setItems(newItems);
   }
 
@@ -46,13 +58,14 @@ function App() {
         <h1>Shopping Cart</h1>
       </header>
       <main>
-        {items.map((item, index) => {
+        {items.map((item) => {
           return (
             <Item
+              key={item.id}
               name={item.name}
               price={item.price}
               count={item.count}
-              setCount={(newItem) => setNewItems(index, newItem)}
+              setCount={(newItem) => setNewItems(item.id, newItem)}
               cartamount={cartamount}
             />
           );
